@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A Little Quiz For You 💖</title>
+<style>
+:root{--bg1:#ffe3ec;--bg2:#ffc2d6;--card:#fffafc;--ink:#5a1633;--accent:#e63977;--accent2:#ff7fa8;--shadow:rgba(230,57,119,.25);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#2a0b1a;--bg2:#4a1230;--card:#3a1226;--ink:#ffe3ec;--accent:#ff5c93;--accent2:#c2336a;--shadow:rgba(0,0,0,.5);color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#2a0b1a;--bg2:#4a1230;--card:#3a1226;--ink:#ffe3ec;--accent:#ff5c93;--accent2:#c2336a;--shadow:rgba(0,0,0,.5);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font-family:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden}
+.heart{position:fixed;bottom:-40px;font-size:22px;opacity:.6;animation:rise linear forwards;pointer-events:none;z-index:0}
+@keyframes rise{to{transform:translateY(-115vh) rotate(40deg);opacity:0}}
+.card{position:relative;z-index:1;background:var(--card);max-width:460px;width:100%;border-radius:28px;padding:32px 24px;text-align:center;box-shadow:0 20px 50px var(--shadow);animation:pop .5s ease}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+h1{font-family:"Dancing Script","Brush Script MT",cursive;font-size:2.4rem;margin:0 0 8px;color:var(--accent);line-height:1.15}
+p{line-height:1.5;margin:8px 0}
+.emoji{font-size:3.4rem;display:block;animation:beat 1.2s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.q{font-size:1.2rem;font-weight:600;margin:12px 0 18px}
+.opt,.btn{display:block;width:100%;margin:10px 0;padding:14px 16px;font:inherit;font-size:1rem;border-radius:16px;border:2px solid var(--accent2);background:transparent;color:var(--ink);cursor:pointer;transition:.2s}
+.opt:hover{background:var(--accent2);color:#fff;transform:translateY(-2px)}
+.btn{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn:hover{transform:scale(1.04)}
+.reply{background:var(--bg1);border-radius:16px;padding:14px;margin:14px 0;font-style:italic;animation:pop .3s}
+.bar{height:8px;background:var(--bg1);border-radius:8px;margin-bottom:18px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .4s}
+#no{position:fixed;z-index:5;width:auto;padding:12px 24px;margin:0}
+.row{display:flex;gap:12px;justify-content:center;align-items:center;min-height:60px}
+.row .btn{width:auto;padding:14px 36px;margin:0;font-size:1.2rem}
+small{opacity:.7}
+</style>
+</head>
+<body>
+<div class="card" id="app"></div>
+<script>
+var name=(decodeURIComponent((location.hash||"").slice(1))||"Cutie").replace(/[<>&]/g,"");
+var Q=[
+{q:"What did you notice first about me?",o:[["My smile 😊","Correct answer. Smile score: 100/100 😎"],["My jokes 😂","Bad choice. Jokes were free, you owe me a coffee ☕"],["My food-sharing skills 🍕","A woman of culture. I will always share fries 🍟"],["Nothing yet 🙄","Wow. Ouch. Okay, I will try harder 🥲"]]},
+{q:"Pick our dream date 🌙",o:[["Candlelight dinner 🕯️","Booked! I will even wear a clean shirt 👔"],["Street food adventure 🌮","You get me. I will take the first bite, for safety."],["Movie marathon 🎬","Deal. But you are not allowed to pause for snack breaks."],["Sleeping 😴","The most romantic plan ever. I accept 💤"]]},
+{q:"How many hugs a day is the right amount? 🤗",o:[["1","Only one? My arms are filing a complaint 📝"],["10","Solid. I will start stretching today 💪"],["Unlimited ♾️","Finally someone smart! Hug limit removed."],["Ask me later 😏","Noted. I will keep asking, politely, forever."]]},
+{q:"If I gave you chocolate, you would...? 🍫",o:[["Say thanks 🙂","Polite! Mom would be proud."],["Share half 🥰","Half a chocolate is half my heart 💘"],["Eat it all 😋","Valid. I will bring two next time."],["Marry me 💍","Slow down, the next question is coming first 😳"]]},
+{q:"Rate my cuteness out of 10 ✨",o:[["7","Brutal. I accept it and will work harder."],["8","The mirror and I are both thrilled."],["9","Almost perfect. I will cry happy tears 😭"],["100","The system has crashed. Please restart my heart ❤️‍🔥"]]}
+];
+var i=0,app=document.getElementById("app");
+function start(){
+ app.innerHTML='<span class="emoji">💌</span><h1>Hey '+name+'...</h1><p>I made something small just for you. It is a tiny quiz and it has <b>no wrong answers</b>. Well, almost none 😏</p><button class="btn" onclick="ask()">Start the quiz 💕</button>';
+}
+function ask(){
+ var d=Q[i],h='<div class="bar"><i style="width:'+(i/Q.length*100)+'%"></i></div><small>Question '+(i+1)+' of '+Q.length+'</small><div class="q">'+d.q+'</div>';
+ d.o.forEach(function(o,k){h+='<button class="opt" onclick="pick('+k+')">'+o[0]+'</button>'});
+ app.innerHTML=h;
+}
+function pick(k){
+ var d=Q[i];
+ app.innerHTML='<div class="bar"><i style="width:'+((i+1)/Q.length*100)+'%"></i></div><span class="emoji">'+["😍","😘","🥰","🤭"][k]+'</span><div class="reply">'+d.o[k][1]+'</div><button class="btn" onclick="next()">Next 💖</button>';
+ burst(5);
+ i++;
+}
+function next(){ if(i<Q.length)ask(); else finale(); }
+var nos=["No 😢","Are you sure? 🥺","Think again 😭","Wrong button!","Nice try 😜","Cannot catch me!","Just say Yes!"],n=0;
+function finale(){
+ app.innerHTML='<span class="emoji">🌹</span><h1>One last question, '+name+'</h1><p class="q">Will you be my girlfriend? 💍</p><div class="row"><button class="btn" id="yes" onclick="yes()">Yes! 💖</button><button class="btn" id="no" style="background:#8a8a8a;border-color:#8a8a8a">No 😢</button></div><p><small>(Be careful, the No button is shy)</small></p>';
+ var no=document.getElementById("no"),y=document.getElementById("yes");
+ var r=y.getBoundingClientRect();no.style.left=(r.right+12)+"px";no.style.top=r.top+"px";
+ if(r.right+120>innerWidth){no.style.left=(r.left)+"px";no.style.top=(r.bottom+14)+"px"}
+ function run(e){
+  if(e&&e.preventDefault)e.preventDefault();
+  n++;no.textContent=nos[n%nos.length];
+  var x=Math.random()*(innerWidth-no.offsetWidth-20)+10,yy=Math.random()*(innerHeight-no.offsetHeight-20)+10;
+  no.style.left=x+"px";no.style.top=yy+"px";
+  y.style.transform="scale("+Math.min(1+n*.12,1.8)+")";
+ }
+ no.addEventListener("mouseover",run);no.addEventListener("touchstart",run,{passive:false});no.addEventListener("click",run);
+}
+function yes(){
+ app.innerHTML='<span class="emoji">🥳</span><h1>She said YES!!</h1><p>I knew it, I mean I hoped it, I mean I was nervous the whole time 😅</p><p><b>'+name+'</b>, you just made me the happiest person alive. Get ready for endless hugs, shared fries and terrible jokes. 💕</p><p>Now screenshot this and send it to me. I want proof 📸😜</p>';
+ burst(60);
+}
+function burst(c){
+ var s=["💖","💕","💗","🌹","💘","✨"];
+ for(var k=0;k<c;k++){(function(){var h=document.createElement("div");h.className="heart";h.textContent=s[Math.floor(Math.random()*s.length)];h.style.left=Math.random()*100+"vw";h.style.fontSize=(16+Math.random()*28)+"px";h.style.animationDuration=(4+Math.random()*5)+"s";h.style.animationDelay=(Math.random()*1.5)+"s";document.body.appendChild(h);setTimeout(function(){h.remove()},11000)})()}
+}
+setInterval(function(){burst(1)},1500);
+start();
+</script>
+</body>
+</html>
